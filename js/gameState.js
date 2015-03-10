@@ -5,6 +5,12 @@ var init_gamestate = {
     userName: "default"
 };
 
+// Loads a preexisting game state from local cookie
+function loadGame()
+{
+    
+}
+
 // set to initial, or to a loaded state
 var gamestate = init_gamestate;
 

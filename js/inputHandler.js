@@ -1,8 +1,8 @@
+// Defines an input handler
+// May or may not have multiple handler instances
+//  one for each sub window or command line
 function InputHandler()
 {
-    // main keyboard input binding:
-    game.input.keyboard.addCallbacks(this, null, null, this.charKeyPress);
-        
     this.inputString = "";
         
     // Callback function for any keyboard press
@@ -14,8 +14,6 @@ function InputHandler()
             this.inputString = char;
         else 
             this.inputString += char;
-        
-        console.log(this.inputString);
     }
     
     // Takes the context of the enter key, and passes to appropriate command controller
@@ -27,13 +25,44 @@ function InputHandler()
         this.inputString = "";
     }
     
-    this.drawCmd = function()
+    this.hitSpace = function()
     {
-        //console.log(this.inputString);
+        this.inputString += " ";
     }
     
-    enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+    this.hitBack = function()
+    {
+        var newString = this.inputString.substring(0, this.inputString.length-1);
+        this.inputString = newString;
+    }
+    
+    this.drawCmdLine = function()
+    {
+        text.setText(this.inputString);
+    }
+    
+    // main keyboard input binding:
+    game.input.keyboard.addCallbacks(this, null, null, this.charKeyPress);
+    
+    // Override keys
+    var spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    spaceKey.onDown.add(this.hitSpace, this);
+    var enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
     enterKey.onDown.add(this.hitReturn, this);
+    var backKey = game.input.keyboard.addKey(Phaser.Keyboard.BACKSPACE);
+    backKey.onDown.add(this.hitBack, this);
+    
+    // TODO override these keys for cursor manipulation
+    var upKey;
+    var downKey;
+    var rightKey;
+    var leftKey;
+    
+    // text block gets drawn automatically, just update this object
+    var text = game.add.text(100, 200, this.inputString, {
+            font: "65px Arial",
+            fill: "#ff0044",
+    });
 }
 
 describe("The input handler", function() {
